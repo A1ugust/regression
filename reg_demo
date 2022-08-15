@@ -1,0 +1,1000 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "name": "Untitled5.ipynb",
+      "provenance": [],
+      "authorship_tag": "ABX9TyNJpVFyEXuPxmOqwehmstHz"
+    },
+    "kernelspec": {
+      "name": "python3",
+      "display_name": "Python 3"
+    },
+    "language_info": {
+      "name": "python"
+    }
+  },
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "3vt5-Rvzty7r"
+      },
+      "source": [
+   
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "FXU3UhKxuZPD"
+      },
+      "source": [
+        "Preliminaries"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "ZmpDrQTdtMiQ"
+      },
+      "source": [
+        "#importing libraries to be used\n",
+        "%matplotlib inline\n",
+        "import numpy as np\n",
+        "import matplotlib.pyplot as plt\n",
+        "import pandas as pd"
+      ],
+      "execution_count": 46,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "HZBIjYzwtb6z"
+      },
+      "source": [
+        "#importing the dataset\n",
+        "df = pd.read_csv('https://archive.ics.uci.edu/ml/machine-learning-databases/00374/energydata_complete.csv')"
+      ],
+      "execution_count": 47,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "Q2ee2ZTsv08c"
+      },
+      "source": [
+        "#setting display to view all columns and rows\n",
+        "pd.set_option('display.max_columns', None)\n",
+        "pd.set_option('display.max_rows', None)"
+      ],
+      "execution_count": 92,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 394
+        },
+        "id": "xinXrFF1t9Sm",
+        "outputId": "39be4754-ad26-48af-e397-fdb3b4d3fd77"
+      },
+      "source": [
+        "#checking the dataset\n",
+        "df.head()"
+      ],
+      "execution_count": 93,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/html": [
+              "<div>\n",
+              "<style scoped>\n",
+              "    .dataframe tbody tr th:only-of-type {\n",
+              "        vertical-align: middle;\n",
+              "    }\n",
+              "\n",
+              "    .dataframe tbody tr th {\n",
+              "        vertical-align: top;\n",
+              "    }\n",
+              "\n",
+              "    .dataframe thead th {\n",
+              "        text-align: right;\n",
+              "    }\n",
+              "</style>\n",
+              "<table border=\"1\" class=\"dataframe\">\n",
+              "  <thead>\n",
+              "    <tr style=\"text-align: right;\">\n",
+              "      <th></th>\n",
+              "      <th>date</th>\n",
+              "      <th>Appliances</th>\n",
+              "      <th>lights</th>\n",
+              "      <th>T1</th>\n",
+              "      <th>RH_1</th>\n",
+              "      <th>Temperature_in_living_room</th>\n",
+              "      <th>RH_2</th>\n",
+              "      <th>T3</th>\n",
+              "      <th>RH_3</th>\n",
+              "      <th>T4</th>\n",
+              "      <th>RH_4</th>\n",
+              "      <th>T5</th>\n",
+              "      <th>RH_5</th>\n",
+              "      <th>Temperature_outside_building</th>\n",
+              "      <th>RH_6</th>\n",
+              "      <th>T7</th>\n",
+              "      <th>RH_7</th>\n",
+              "      <th>T8</th>\n",
+              "      <th>RH_8</th>\n",
+              "      <th>T9</th>\n",
+              "      <th>RH_9</th>\n",
+              "      <th>T_out</th>\n",
+              "      <th>Press_mm_hg</th>\n",
+              "      <th>RH_out</th>\n",
+              "      <th>Windspeed</th>\n",
+              "      <th>Visibility</th>\n",
+              "      <th>Tdewpoint</th>\n",
+              "      <th>rv1</th>\n",
+              "      <th>rv2</th>\n",
+              "    </tr>\n",
+              "  </thead>\n",
+              "  <tbody>\n",
+              "    <tr>\n",
+              "      <th>0</th>\n",
+              "      <td>2016-01-11 17:00:00</td>\n",
+              "      <td>60</td>\n",
+              "      <td>30</td>\n",
+              "      <td>19.89</td>\n",
+              "      <td>47.596667</td>\n",
+              "      <td>19.2</td>\n",
+              "      <td>44.790000</td>\n",
+              "      <td>19.79</td>\n",
+              "      <td>44.730000</td>\n",
+              "      <td>19.000000</td>\n",
+              "      <td>45.566667</td>\n",
+              "      <td>17.166667</td>\n",
+              "      <td>55.20</td>\n",
+              "      <td>7.026667</td>\n",
+              "      <td>84.256667</td>\n",
+              "      <td>17.200000</td>\n",
+              "      <td>41.626667</td>\n",
+              "      <td>18.2</td>\n",
+              "      <td>48.900000</td>\n",
+              "      <td>17.033333</td>\n",
+              "      <td>45.53</td>\n",
+              "      <td>6.600000</td>\n",
+              "      <td>733.5</td>\n",
+              "      <td>92.0</td>\n",
+              "      <td>7.000000</td>\n",
+              "      <td>63.000000</td>\n",
+              "      <td>5.3</td>\n",
+              "      <td>13.275433</td>\n",
+              "      <td>13.275433</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>1</th>\n",
+              "      <td>2016-01-11 17:10:00</td>\n",
+              "      <td>60</td>\n",
+              "      <td>30</td>\n",
+              "      <td>19.89</td>\n",
+              "      <td>46.693333</td>\n",
+              "      <td>19.2</td>\n",
+              "      <td>44.722500</td>\n",
+              "      <td>19.79</td>\n",
+              "      <td>44.790000</td>\n",
+              "      <td>19.000000</td>\n",
+              "      <td>45.992500</td>\n",
+              "      <td>17.166667</td>\n",
+              "      <td>55.20</td>\n",
+              "      <td>6.833333</td>\n",
+              "      <td>84.063333</td>\n",
+              "      <td>17.200000</td>\n",
+              "      <td>41.560000</td>\n",
+              "      <td>18.2</td>\n",
+              "      <td>48.863333</td>\n",
+              "      <td>17.066667</td>\n",
+              "      <td>45.56</td>\n",
+              "      <td>6.483333</td>\n",
+              "      <td>733.6</td>\n",
+              "      <td>92.0</td>\n",
+              "      <td>6.666667</td>\n",
+              "      <td>59.166667</td>\n",
+              "      <td>5.2</td>\n",
+              "      <td>18.606195</td>\n",
+              "      <td>18.606195</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>2</th>\n",
+              "      <td>2016-01-11 17:20:00</td>\n",
+              "      <td>50</td>\n",
+              "      <td>30</td>\n",
+              "      <td>19.89</td>\n",
+              "      <td>46.300000</td>\n",
+              "      <td>19.2</td>\n",
+              "      <td>44.626667</td>\n",
+              "      <td>19.79</td>\n",
+              "      <td>44.933333</td>\n",
+              "      <td>18.926667</td>\n",
+              "      <td>45.890000</td>\n",
+              "      <td>17.166667</td>\n",
+              "      <td>55.09</td>\n",
+              "      <td>6.560000</td>\n",
+              "      <td>83.156667</td>\n",
+              "      <td>17.200000</td>\n",
+              "      <td>41.433333</td>\n",
+              "      <td>18.2</td>\n",
+              "      <td>48.730000</td>\n",
+              "      <td>17.000000</td>\n",
+              "      <td>45.50</td>\n",
+              "      <td>6.366667</td>\n",
+              "      <td>733.7</td>\n",
+              "      <td>92.0</td>\n",
+              "      <td>6.333333</td>\n",
+              "      <td>55.333333</td>\n",
+              "      <td>5.1</td>\n",
+              "      <td>28.642668</td>\n",
+              "      <td>28.642668</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>3</th>\n",
+              "      <td>2016-01-11 17:30:00</td>\n",
+              "      <td>50</td>\n",
+              "      <td>40</td>\n",
+              "      <td>19.89</td>\n",
+              "      <td>46.066667</td>\n",
+              "      <td>19.2</td>\n",
+              "      <td>44.590000</td>\n",
+              "      <td>19.79</td>\n",
+              "      <td>45.000000</td>\n",
+              "      <td>18.890000</td>\n",
+              "      <td>45.723333</td>\n",
+              "      <td>17.166667</td>\n",
+              "      <td>55.09</td>\n",
+              "      <td>6.433333</td>\n",
+              "      <td>83.423333</td>\n",
+              "      <td>17.133333</td>\n",
+              "      <td>41.290000</td>\n",
+              "      <td>18.1</td>\n",
+              "      <td>48.590000</td>\n",
+              "      <td>17.000000</td>\n",
+              "      <td>45.40</td>\n",
+              "      <td>6.250000</td>\n",
+              "      <td>733.8</td>\n",
+              "      <td>92.0</td>\n",
+              "      <td>6.000000</td>\n",
+              "      <td>51.500000</td>\n",
+              "      <td>5.0</td>\n",
+              "      <td>45.410389</td>\n",
+              "      <td>45.410389</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>4</th>\n",
+              "      <td>2016-01-11 17:40:00</td>\n",
+              "      <td>60</td>\n",
+              "      <td>40</td>\n",
+              "      <td>19.89</td>\n",
+              "      <td>46.333333</td>\n",
+              "      <td>19.2</td>\n",
+              "      <td>44.530000</td>\n",
+              "      <td>19.79</td>\n",
+              "      <td>45.000000</td>\n",
+              "      <td>18.890000</td>\n",
+              "      <td>45.530000</td>\n",
+              "      <td>17.200000</td>\n",
+              "      <td>55.09</td>\n",
+              "      <td>6.366667</td>\n",
+              "      <td>84.893333</td>\n",
+              "      <td>17.200000</td>\n",
+              "      <td>41.230000</td>\n",
+              "      <td>18.1</td>\n",
+              "      <td>48.590000</td>\n",
+              "      <td>17.000000</td>\n",
+              "      <td>45.40</td>\n",
+              "      <td>6.133333</td>\n",
+              "      <td>733.9</td>\n",
+              "      <td>92.0</td>\n",
+              "      <td>5.666667</td>\n",
+              "      <td>47.666667</td>\n",
+              "      <td>4.9</td>\n",
+              "      <td>10.084097</td>\n",
+              "      <td>10.084097</td>\n",
+              "    </tr>\n",
+              "  </tbody>\n",
+              "</table>\n",
+              "</div>"
+            ],
+            "text/plain": [
+              "                  date  Appliances  lights     T1       RH_1  \\\n",
+              "0  2016-01-11 17:00:00          60      30  19.89  47.596667   \n",
+              "1  2016-01-11 17:10:00          60      30  19.89  46.693333   \n",
+              "2  2016-01-11 17:20:00          50      30  19.89  46.300000   \n",
+              "3  2016-01-11 17:30:00          50      40  19.89  46.066667   \n",
+              "4  2016-01-11 17:40:00          60      40  19.89  46.333333   \n",
+              "\n",
+              "   Temperature_in_living_room       RH_2     T3       RH_3         T4  \\\n",
+              "0                        19.2  44.790000  19.79  44.730000  19.000000   \n",
+              "1                        19.2  44.722500  19.79  44.790000  19.000000   \n",
+              "2                        19.2  44.626667  19.79  44.933333  18.926667   \n",
+              "3                        19.2  44.590000  19.79  45.000000  18.890000   \n",
+              "4                        19.2  44.530000  19.79  45.000000  18.890000   \n",
+              "\n",
+              "        RH_4         T5   RH_5  Temperature_outside_building       RH_6  \\\n",
+              "0  45.566667  17.166667  55.20                      7.026667  84.256667   \n",
+              "1  45.992500  17.166667  55.20                      6.833333  84.063333   \n",
+              "2  45.890000  17.166667  55.09                      6.560000  83.156667   \n",
+              "3  45.723333  17.166667  55.09                      6.433333  83.423333   \n",
+              "4  45.530000  17.200000  55.09                      6.366667  84.893333   \n",
+              "\n",
+              "          T7       RH_7    T8       RH_8         T9   RH_9     T_out  \\\n",
+              "0  17.200000  41.626667  18.2  48.900000  17.033333  45.53  6.600000   \n",
+              "1  17.200000  41.560000  18.2  48.863333  17.066667  45.56  6.483333   \n",
+              "2  17.200000  41.433333  18.2  48.730000  17.000000  45.50  6.366667   \n",
+              "3  17.133333  41.290000  18.1  48.590000  17.000000  45.40  6.250000   \n",
+              "4  17.200000  41.230000  18.1  48.590000  17.000000  45.40  6.133333   \n",
+              "\n",
+              "   Press_mm_hg  RH_out  Windspeed  Visibility  Tdewpoint        rv1        rv2  \n",
+              "0        733.5    92.0   7.000000   63.000000        5.3  13.275433  13.275433  \n",
+              "1        733.6    92.0   6.666667   59.166667        5.2  18.606195  18.606195  \n",
+              "2        733.7    92.0   6.333333   55.333333        5.1  28.642668  28.642668  \n",
+              "3        733.8    92.0   6.000000   51.500000        5.0  45.410389  45.410389  \n",
+              "4        733.9    92.0   5.666667   47.666667        4.9  10.084097  10.084097  "
+            ]
+          },
+          "metadata": {},
+          "execution_count": 93
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "mhfIyNNkmNjz"
+      },
+      "source": [
+        "#renaming columns\n",
+        "column_names = {'T2':'Temperature_in_living_room', 'T6': 'Temperature_outside_building'}\n",
+        "df = df.rename(columns=column_names)"
+      ],
+      "execution_count": 99,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 394
+        },
+        "id": "97d3UUAmmwNL",
+        "outputId": "b4dc0778-6d58-444a-9a8b-438d2c35f816"
+      },
+      "source": [
+        "#checking dataset with renamed columns\n",
+        "df.head()"
+      ],
+      "execution_count": 101,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/html": [
+              "<div>\n",
+              "<style scoped>\n",
+              "    .dataframe tbody tr th:only-of-type {\n",
+              "        vertical-align: middle;\n",
+              "    }\n",
+              "\n",
+              "    .dataframe tbody tr th {\n",
+              "        vertical-align: top;\n",
+              "    }\n",
+              "\n",
+              "    .dataframe thead th {\n",
+              "        text-align: right;\n",
+              "    }\n",
+              "</style>\n",
+              "<table border=\"1\" class=\"dataframe\">\n",
+              "  <thead>\n",
+              "    <tr style=\"text-align: right;\">\n",
+              "      <th></th>\n",
+              "      <th>date</th>\n",
+              "      <th>Appliances</th>\n",
+              "      <th>lights</th>\n",
+              "      <th>T1</th>\n",
+              "      <th>RH_1</th>\n",
+              "      <th>Temperature_in_living_room</th>\n",
+              "      <th>RH_2</th>\n",
+              "      <th>T3</th>\n",
+              "      <th>RH_3</th>\n",
+              "      <th>T4</th>\n",
+              "      <th>RH_4</th>\n",
+              "      <th>T5</th>\n",
+              "      <th>RH_5</th>\n",
+              "      <th>Temperature_outside_building</th>\n",
+              "      <th>RH_6</th>\n",
+              "      <th>T7</th>\n",
+              "      <th>RH_7</th>\n",
+              "      <th>T8</th>\n",
+              "      <th>RH_8</th>\n",
+              "      <th>T9</th>\n",
+              "      <th>RH_9</th>\n",
+              "      <th>T_out</th>\n",
+              "      <th>Press_mm_hg</th>\n",
+              "      <th>RH_out</th>\n",
+              "      <th>Windspeed</th>\n",
+              "      <th>Visibility</th>\n",
+              "      <th>Tdewpoint</th>\n",
+              "      <th>rv1</th>\n",
+              "      <th>rv2</th>\n",
+              "    </tr>\n",
+              "  </thead>\n",
+              "  <tbody>\n",
+              "    <tr>\n",
+              "      <th>0</th>\n",
+              "      <td>2016-01-11 17:00:00</td>\n",
+              "      <td>60</td>\n",
+              "      <td>30</td>\n",
+              "      <td>19.89</td>\n",
+              "      <td>47.596667</td>\n",
+              "      <td>19.2</td>\n",
+              "      <td>44.790000</td>\n",
+              "      <td>19.79</td>\n",
+              "      <td>44.730000</td>\n",
+              "      <td>19.000000</td>\n",
+              "      <td>45.566667</td>\n",
+              "      <td>17.166667</td>\n",
+              "      <td>55.20</td>\n",
+              "      <td>7.026667</td>\n",
+              "      <td>84.256667</td>\n",
+              "      <td>17.200000</td>\n",
+              "      <td>41.626667</td>\n",
+              "      <td>18.2</td>\n",
+              "      <td>48.900000</td>\n",
+              "      <td>17.033333</td>\n",
+              "      <td>45.53</td>\n",
+              "      <td>6.600000</td>\n",
+              "      <td>733.5</td>\n",
+              "      <td>92.0</td>\n",
+              "      <td>7.000000</td>\n",
+              "      <td>63.000000</td>\n",
+              "      <td>5.3</td>\n",
+              "      <td>13.275433</td>\n",
+              "      <td>13.275433</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>1</th>\n",
+              "      <td>2016-01-11 17:10:00</td>\n",
+              "      <td>60</td>\n",
+              "      <td>30</td>\n",
+              "      <td>19.89</td>\n",
+              "      <td>46.693333</td>\n",
+              "      <td>19.2</td>\n",
+              "      <td>44.722500</td>\n",
+              "      <td>19.79</td>\n",
+              "      <td>44.790000</td>\n",
+              "      <td>19.000000</td>\n",
+              "      <td>45.992500</td>\n",
+              "      <td>17.166667</td>\n",
+              "      <td>55.20</td>\n",
+              "      <td>6.833333</td>\n",
+              "      <td>84.063333</td>\n",
+              "      <td>17.200000</td>\n",
+              "      <td>41.560000</td>\n",
+              "      <td>18.2</td>\n",
+              "      <td>48.863333</td>\n",
+              "      <td>17.066667</td>\n",
+              "      <td>45.56</td>\n",
+              "      <td>6.483333</td>\n",
+              "      <td>733.6</td>\n",
+              "      <td>92.0</td>\n",
+              "      <td>6.666667</td>\n",
+              "      <td>59.166667</td>\n",
+              "      <td>5.2</td>\n",
+              "      <td>18.606195</td>\n",
+              "      <td>18.606195</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>2</th>\n",
+              "      <td>2016-01-11 17:20:00</td>\n",
+              "      <td>50</td>\n",
+              "      <td>30</td>\n",
+              "      <td>19.89</td>\n",
+              "      <td>46.300000</td>\n",
+              "      <td>19.2</td>\n",
+              "      <td>44.626667</td>\n",
+              "      <td>19.79</td>\n",
+              "      <td>44.933333</td>\n",
+              "      <td>18.926667</td>\n",
+              "      <td>45.890000</td>\n",
+              "      <td>17.166667</td>\n",
+              "      <td>55.09</td>\n",
+              "      <td>6.560000</td>\n",
+              "      <td>83.156667</td>\n",
+              "      <td>17.200000</td>\n",
+              "      <td>41.433333</td>\n",
+              "      <td>18.2</td>\n",
+              "      <td>48.730000</td>\n",
+              "      <td>17.000000</td>\n",
+              "      <td>45.50</td>\n",
+              "      <td>6.366667</td>\n",
+              "      <td>733.7</td>\n",
+              "      <td>92.0</td>\n",
+              "      <td>6.333333</td>\n",
+              "      <td>55.333333</td>\n",
+              "      <td>5.1</td>\n",
+              "      <td>28.642668</td>\n",
+              "      <td>28.642668</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>3</th>\n",
+              "      <td>2016-01-11 17:30:00</td>\n",
+              "      <td>50</td>\n",
+              "      <td>40</td>\n",
+              "      <td>19.89</td>\n",
+              "      <td>46.066667</td>\n",
+              "      <td>19.2</td>\n",
+              "      <td>44.590000</td>\n",
+              "      <td>19.79</td>\n",
+              "      <td>45.000000</td>\n",
+              "      <td>18.890000</td>\n",
+              "      <td>45.723333</td>\n",
+              "      <td>17.166667</td>\n",
+              "      <td>55.09</td>\n",
+              "      <td>6.433333</td>\n",
+              "      <td>83.423333</td>\n",
+              "      <td>17.133333</td>\n",
+              "      <td>41.290000</td>\n",
+              "      <td>18.1</td>\n",
+              "      <td>48.590000</td>\n",
+              "      <td>17.000000</td>\n",
+              "      <td>45.40</td>\n",
+              "      <td>6.250000</td>\n",
+              "      <td>733.8</td>\n",
+              "      <td>92.0</td>\n",
+              "      <td>6.000000</td>\n",
+              "      <td>51.500000</td>\n",
+              "      <td>5.0</td>\n",
+              "      <td>45.410389</td>\n",
+              "      <td>45.410389</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>4</th>\n",
+              "      <td>2016-01-11 17:40:00</td>\n",
+              "      <td>60</td>\n",
+              "      <td>40</td>\n",
+              "      <td>19.89</td>\n",
+              "      <td>46.333333</td>\n",
+              "      <td>19.2</td>\n",
+              "      <td>44.530000</td>\n",
+              "      <td>19.79</td>\n",
+              "      <td>45.000000</td>\n",
+              "      <td>18.890000</td>\n",
+              "      <td>45.530000</td>\n",
+              "      <td>17.200000</td>\n",
+              "      <td>55.09</td>\n",
+              "      <td>6.366667</td>\n",
+              "      <td>84.893333</td>\n",
+              "      <td>17.200000</td>\n",
+              "      <td>41.230000</td>\n",
+              "      <td>18.1</td>\n",
+              "      <td>48.590000</td>\n",
+              "      <td>17.000000</td>\n",
+              "      <td>45.40</td>\n",
+              "      <td>6.133333</td>\n",
+              "      <td>733.9</td>\n",
+              "      <td>92.0</td>\n",
+              "      <td>5.666667</td>\n",
+              "      <td>47.666667</td>\n",
+              "      <td>4.9</td>\n",
+              "      <td>10.084097</td>\n",
+              "      <td>10.084097</td>\n",
+              "    </tr>\n",
+              "  </tbody>\n",
+              "</table>\n",
+              "</div>"
+            ],
+            "text/plain": [
+              "                  date  Appliances  lights     T1       RH_1  \\\n",
+              "0  2016-01-11 17:00:00          60      30  19.89  47.596667   \n",
+              "1  2016-01-11 17:10:00          60      30  19.89  46.693333   \n",
+              "2  2016-01-11 17:20:00          50      30  19.89  46.300000   \n",
+              "3  2016-01-11 17:30:00          50      40  19.89  46.066667   \n",
+              "4  2016-01-11 17:40:00          60      40  19.89  46.333333   \n",
+              "\n",
+              "   Temperature_in_living_room       RH_2     T3       RH_3         T4  \\\n",
+              "0                        19.2  44.790000  19.79  44.730000  19.000000   \n",
+              "1                        19.2  44.722500  19.79  44.790000  19.000000   \n",
+              "2                        19.2  44.626667  19.79  44.933333  18.926667   \n",
+              "3                        19.2  44.590000  19.79  45.000000  18.890000   \n",
+              "4                        19.2  44.530000  19.79  45.000000  18.890000   \n",
+              "\n",
+              "        RH_4         T5   RH_5  Temperature_outside_building       RH_6  \\\n",
+              "0  45.566667  17.166667  55.20                      7.026667  84.256667   \n",
+              "1  45.992500  17.166667  55.20                      6.833333  84.063333   \n",
+              "2  45.890000  17.166667  55.09                      6.560000  83.156667   \n",
+              "3  45.723333  17.166667  55.09                      6.433333  83.423333   \n",
+              "4  45.530000  17.200000  55.09                      6.366667  84.893333   \n",
+              "\n",
+              "          T7       RH_7    T8       RH_8         T9   RH_9     T_out  \\\n",
+              "0  17.200000  41.626667  18.2  48.900000  17.033333  45.53  6.600000   \n",
+              "1  17.200000  41.560000  18.2  48.863333  17.066667  45.56  6.483333   \n",
+              "2  17.200000  41.433333  18.2  48.730000  17.000000  45.50  6.366667   \n",
+              "3  17.133333  41.290000  18.1  48.590000  17.000000  45.40  6.250000   \n",
+              "4  17.200000  41.230000  18.1  48.590000  17.000000  45.40  6.133333   \n",
+              "\n",
+              "   Press_mm_hg  RH_out  Windspeed  Visibility  Tdewpoint        rv1        rv2  \n",
+              "0        733.5    92.0   7.000000   63.000000        5.3  13.275433  13.275433  \n",
+              "1        733.6    92.0   6.666667   59.166667        5.2  18.606195  18.606195  \n",
+              "2        733.7    92.0   6.333333   55.333333        5.1  28.642668  28.642668  \n",
+              "3        733.8    92.0   6.000000   51.500000        5.0  45.410389  45.410389  \n",
+              "4        733.9    92.0   5.666667   47.666667        4.9  10.084097  10.084097  "
+            ]
+          },
+          "metadata": {},
+          "execution_count": 101
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "_agT3Nvd8-KA"
+      },
+      "source": [
+        "#doing MinMax Scaling for Normalization\n",
+        "from sklearn.preprocessing import MinMaxScaler\n",
+        "scaler = MinMaxScaler()\n",
+        "df_new_normalised = pd.DataFrame(scaler.fit_transform(df_new), columns=df_new.columns)"
+      ],
+      "execution_count": 83,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "U7IaWvyrGYgD"
+      },
+      "source": [
+        "#training the model\n",
+        "x_train = df.Temperature_in_living_room\n",
+        "y_train = df.Temperature_outside_building\n"
+      ],
+      "execution_count": 90,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "DOHxtEKij9dv"
+      },
+      "source": [
+        "#using a 70-30 train-test set split with a random state of 42 (for reproducibility)\n",
+        "from sklearn.model_selection import train_test_split \n",
+        "X = df[['Temperature_in_living_room']] \n",
+        "y = df['Temperature_outside_building']\n",
+        "#reshaping the array\n",
+        "X = pd.factorize(df['Temperature_in_living_room'])[0].reshape(-1, 1) \n",
+        "y = pd.factorize(df['Temperature_outside_building'])[0].reshape(-1, 1) \n",
+        "X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)"
+      ],
+      "execution_count": 98,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "cEfM8gNVIh8f"
+      },
+      "source": [
+        "#importing Linear Regression Model\n",
+        "from sklearn.linear_model import LinearRegression\n",
+        "linear_model = LinearRegression()\n",
+        "#fitting the model to the trained dataset\n",
+        "linear_model.fit(X_train, y_train)\n",
+        "#obtain predictions\n",
+        "predicted_values = linear_model.predict(X_test)"
+      ],
+      "execution_count": 64,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "NzonaHk_I0e-"
+      },
+      "source": [
+        "#Importing the metrics for evaluation\n",
+        "from sklearn import metrics"
+      ],
+      "execution_count": 63,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "RJTAo_WNXQ21"
+      },
+      "source": [
+        "*Question 12*"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "t6FsoI_DJFw1",
+        "outputId": "b607aac0-f485-4726-a316-1b9e9849d572"
+      },
+      "source": [
+        "#evaluating R2_score (r2_score)\n",
+        "r2_score = (metrics.r2_score(y_test, predicted_values))\n",
+        "round(r2_score, 2)"
+      ],
+      "execution_count": 66,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "0.41"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 66
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "GE0AmhLDYoAg"
+      },
+      "source": [
+        "*Question* *13*"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "LI3aKGBVY3xB",
+        "outputId": "5d2582e0-c7ab-4523-8fb0-812654dc228f"
+      },
+      "source": [
+        "#evaluating Mean Absolute Error (mae)\n",
+        "mae = (metrics.mean_absolute_error(y_test, predicted_values))\n",
+        "round(mae, 2)"
+      ],
+      "execution_count": 67,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "675.64"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 67
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "mKZC7DejZZQb"
+      },
+      "source": [
+        "*Question* *14*"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "-0Th5_dsJSkQ",
+        "outputId": "cd21afb1-0e41-4e2c-d72d-ca3d521c51dd"
+      },
+      "source": [
+        "#evaluating Residual Sum of Squares (rss)\n",
+        "import numpy as np\n",
+        "rss = np.sum(np.square(y_test - predicted_values))\n",
+        "round(rss, 2) "
+      ],
+      "execution_count": 68,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "4467998151.57"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 68
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "g0m9uDaLaVHq"
+      },
+      "source": [
+        "*Question 15*"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "z3nSrxpDabX6",
+        "outputId": "6bdadfdb-143e-4b90-cfa5-c6818b027265"
+      },
+      "source": [
+        "#evaluating Root Mean Squared Error (rmse)\n",
+        "rmse = (np.sqrt(metrics.mean_squared_error(y_test,predicted_values)))\n",
+        "round(rmse, 3)"
+      ],
+      "execution_count": 69,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "868.678"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 69
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "-TJWv2MebVoZ"
+      },
+      "source": [
+        "*Question 16*"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "A5I4Lm_ObpBm",
+        "outputId": "4ba5335f-304a-4dc9-b0e0-2b96c2d61105"
+      },
+      "source": [
+        "#evaluating Coefficient of Determination (r2_score)\n",
+        "r2_score = (metrics.r2_score(y_test, predicted_values))\n",
+        "round(r2_score, 2)"
+      ],
+      "execution_count": 70,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "0.41"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 70
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "Fv87WNjBc6rP"
+      },
+      "source": [
+        "*Question 18*"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "26FUu0mFc5g2",
+        "outputId": "ec71b5cc-e87f-4f52-b712-77ae9c97e6de"
+      },
+      "source": [
+        "#Ridge regression with alpha=0.4\n",
+        "from sklearn.linear_model import Ridge\n",
+        "ridge_reg_0 = Ridge(alpha=0.4)\n",
+        "ridge_reg_0.fit(X_train, y_train)\n",
+        "#to predict test data\n",
+        "pred0 = ridge_reg_0.predict(X_test)\n",
+        "#RMSE\n",
+        "rmse = (np.sqrt(metrics.mean_squared_error(y_test, pred0)))\n",
+        "round(rmse, 3)\n",
+        "\n",
+        "#it prints 868.678 which is the same value as the Root Mean Squared Value"
+      ],
+      "execution_count": 74,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "868.678"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 74
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "GyjeyyjzgzTc"
+      },
+      "source": [
+        "*Question 20*"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "g8oIztvsg3t6",
+        "outputId": "00d4531b-4751-41f6-a2b1-ee95469c9ec3"
+      },
+      "source": [
+        "#Lasso regression with alpha=0.001\n",
+        "from sklearn.linear_model import Lasso\n",
+        "lasso_reg_9 = Lasso(alpha=0.001)\n",
+        "lasso_reg_9.fit(X_train, y_train)\n",
+        "# To predict test data\n",
+        "pred9 = lasso_reg_9.predict(X_test)\n",
+        "#RMSE \n",
+        "rmse = np.sqrt(metrics.mean_squared_error(y_test, pred9))\n",
+        "round(rmse, 3)"
+      ],
+      "execution_count": 75,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "868.678"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 75
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "2pLvIJ0WhiOW"
+      },
+      "source": [
+        "**END OF NOTEBOOK**"
+      ]
+    }
+  ]
+}
